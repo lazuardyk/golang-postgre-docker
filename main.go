@@ -3,16 +3,18 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"os"
+	"strconv"
 
 	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "localhost"
-    port     = 5432
-    user     = "postgres"
-    password = "postgres"
-    dbname   = "golang"
+var (
+	host     = os.Getenv("DATABASE_HOST")
+    port     = os.Getenv("DATABASE_PORT")
+    user     = os.Getenv("DATABASE_USER")
+    password = os.Getenv("DATABASE_PASSWORD")
+    dbname   = os.Getenv("DATABASE_NAME")
 )
 
 func CheckError(err error) {
@@ -22,7 +24,8 @@ func CheckError(err error) {
 }
 
 func main(){
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	portint, _ := strconv.Atoi(port)
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, portint, user, password, dbname)
 	fmt.Println(psqlconn)
 
 	db, err := sql.Open("postgres", psqlconn)
